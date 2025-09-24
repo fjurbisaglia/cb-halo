@@ -1,0 +1,25 @@
+[debug] [2025-09-24T23:01:39.156Z] ----------------------------------------------------------------------
+[debug] [2025-09-24T23:01:39.158Z] Command:       /Users/fabriziourbisaglia/.nvm/versions/node/v20.19.0/bin/node /Users/fabriziourbisaglia/.nvm/versions/node/v20.19.0/bin/firebase init
+[debug] [2025-09-24T23:01:39.158Z] CLI Version:   14.17.0
+[debug] [2025-09-24T23:01:39.158Z] Platform:      darwin
+[debug] [2025-09-24T23:01:39.158Z] Node Version:  v20.19.0
+[debug] [2025-09-24T23:01:39.158Z] Time:          Thu Sep 25 2025 01:01:39 GMT+0200 (Central European Summer Time)
+[debug] [2025-09-24T23:01:39.158Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-24T23:01:39.260Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-24T23:01:39.261Z] > authorizing via signed-in user (fjurbisaglia@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/fabriziourbisaglia/Desktop/cbh/cb-halo
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
