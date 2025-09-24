@@ -3,17 +3,19 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "serve:cb-halo": "nx serve cb-halo"
+    "serve:cb-halo": "nx serve cb-halo --port=4800"
   },
   "private": true,
   "dependencies": {
     "@angular/common": "~20.2.0",
     "@angular/compiler": "~20.2.0",
     "@angular/core": "~20.2.0",
+    "@angular/fire": "^20.0.1",
     "@angular/forms": "~20.2.0",
     "@angular/platform-browser": "~20.2.0",
     "@angular/platform-browser-dynamic": "~20.2.0",
     "@angular/router": "~20.2.0",
+    "firebase": "^11.10.0",
     "rxjs": "~7.8.0",
     "zone.js": "~0.15.0"
   },

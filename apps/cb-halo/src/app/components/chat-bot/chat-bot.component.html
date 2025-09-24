@@ -9,7 +9,7 @@
     </div>
     <div class="chatbot-info">
 
-      <h2>AI Assistant {{ companyId() }}
+      <h2>AI Assistant
       </h2>
       <div class="status-indicator">
         <span class="status-dot"></span>
@@ -64,7 +64,7 @@
     />
     <button
       class="send-button"
-      [disabled]="!formControl?.value || formControl?.invalid"
+      [disabled]="!formControl?.value"
       (click)="sendMessage()"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

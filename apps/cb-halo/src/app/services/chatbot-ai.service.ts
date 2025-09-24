@@ -4,18 +4,16 @@ import { from, Observable } from 'rxjs';
 type ChatRunResponse = {
   conversationId: string;
   reply: string;
-  usedItemIds?: string[];
 };
 
 export class ChatbotAiService {
-  private endpoint = 'https://chatrun-drhgcr6qya-uc.a.run.app';
-  private channel: 'web' | 'whatsapp' = 'web';
+  private endpoint = 'https://us-central1-cb-halo.cloudfunctions.net/chatRun';
 
-  conversationId = signal<string | 'auto' | null>(null);
+  conversationId = signal<string | null>(null);
 
   constructor() {
     // Recuperar de localStorage o iniciar en 'auto'
-    this.conversationId.set(localStorage.getItem('conversationId') || 'auto');
+    this.conversationId.set(localStorage.getItem('conversationId') || null);
   }
 
   private getBrowserLocale(): string {
@@ -23,12 +21,10 @@ export class ChatbotAiService {
     return (navigator.language || 'es').split('-')[0].toLowerCase();
   }
 
-  getReply$(message: string, companyId: string): Observable<string> {
+  getReply$(message: string): Observable<string> {
     const body = {
-      companyId,
       message,
-      channel: this.channel,
-      conversationId: this.conversationId() || 'auto',
+      conversationId: this.conversationId() || undefined,
       locale: this.getBrowserLocale(),
     };
 

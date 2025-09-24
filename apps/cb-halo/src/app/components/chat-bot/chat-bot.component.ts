@@ -10,9 +10,9 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 // import { Company, CompanyService } from '@chatbot/company';
 import { finalize } from 'rxjs';
+import { ChatbotAiService } from '../../services/chatbot-ai.service';
+import { INITIAL_TRIGGER } from '../../constants/initial-trigger.constants';
 
-import { ChatbotAiService } from '../services/chatbot-ai.service';
-import { INITIAL_TRIGGER } from '../constants/initial-trigger.constants';
 
 interface Message {
   content: string;
@@ -34,11 +34,8 @@ export class ChatBotComponent implements OnInit {
   // company = signal<Company | null>(null);
   chatbotImageUrl = signal<string | null>(null);
 
-  private route = inject(ActivatedRoute);
   private aiService = inject(ChatbotAiService);
   // private companyService = inject(CompanyService);
-
-  companyId = signal<string>('');
 
   formControl = new FormControl('');
 
@@ -49,9 +46,7 @@ export class ChatBotComponent implements OnInit {
 
       // Only load messages if we have a valid conversationId and it's not the initial 'auto'
       if (
-        conversationId &&
-        conversationId !== 'auto' &&
-        this.messages.length === 0
+        conversationId
       ) {
         this.loadMessagesFromStorage();
       }
@@ -59,19 +54,18 @@ export class ChatBotComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.companyId.set(this.getCompanyIdFromScript() || '');
-
     // Load messages from storage first if there's an existing conversation
-    this.loadMessagesFromStorage();
+    // this.loadMessagesFromStorage();
 
     // if (this.companyId()) {
     //   this.loadCompanyData(this.companyId());
     // }
 
+
+
     // Only start a new conversation if there's no existing conversationId or it's 'auto'
     if (
-      !this.aiService.conversationId() ||
-      this.aiService.conversationId() === 'auto'
+      !this.aiService.conversationId()
     ) {
       this.getReply(INITIAL_TRIGGER);
     }
@@ -105,39 +99,10 @@ export class ChatBotComponent implements OnInit {
     }
   }
 
-  private getCompanyIdFromScript(): string | null {
-    try {
-      // Get company ID from URL parameters (passed by chatbot.js)
-      const urlParams = new URLSearchParams(window.location.search);
-      const companyId = urlParams.get('companyId');
-      console.log('Company ID from script:', companyId);
-      return companyId || null;
-    } catch (error) {
-      console.error('Error getting company ID from script:', error);
-      return null;
-    }
-  }
-
-  // loadCompanyData(companyId: string): void {
-  //   this.companyService.getCompanyById(companyId).subscribe({
-  //     next: (company) => {
-  //       this.company.set(company);
-  //       // Extract chatbot image URL from settings
-  //       const imageUrl = company?.settings?.chatbotImageUrl;
-  //       this.chatbotImageUrl.set(imageUrl || null);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error loading company data:', error);
-  //       this.company.set(null);
-  //       this.chatbotImageUrl.set(null);
-  //     },
-  //   });
-  // }
-
   getReply(message: string): void {
     this.isTyping.set(true);
     this.aiService
-      .getReply$(message, this.companyId())
+      .getReply$(message)
       .pipe(finalize(() => this.isTyping.set(false)))
       .subscribe((res) => {
         this.addMessage(res, 'ai');
