@@ -2,7 +2,9 @@
   "name": "@cb-halo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "serve:cb-halo": "nx serve cb-halo"
+  },
   "private": true,
   "dependencies": {
     "@angular/common": "~20.2.0",
