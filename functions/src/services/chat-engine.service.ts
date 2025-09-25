@@ -11,8 +11,6 @@ export class ChatEngineService {
   openaiService = new OpenAIService2();
   settingsService = new SettingsService();
   vectorSearchService = new VectorSearchService();
-
-
   conversationId: string | undefined;
   summary: string | undefined;
   browserLocale: string | undefined;
@@ -65,11 +63,11 @@ export class ChatEngineService {
       const embedding = await this.openaiService.embed(userQuery.query);
 
       // 2) Vecinos + contexto (con fallback local si Vertex falla)
-      const { ids, context } = await this.vectorSearchService.findWithContext(
+      const { context } = await this.vectorSearchService.findWithContext(
         embedding,
         5,
-        this.openaiService.getClient() // <-- pásalo para fallback
       );
+
 
       // 3) Redacción final con contexto
       const system = 'You are a concise travel-insurance assistant. Use ONLY the provided context. If info is missing, ask briefly for it.';
@@ -77,7 +75,8 @@ export class ChatEngineService {
       const final = await this.openaiService.gpt5NanoText(system, userInput);
 
       await this.openaiService.addItems(this.conversationId!, [
-        { role: 'assistant', content: `SOURCES: ${ids.join(', ')}` },
+        {role: 'user', content: message},
+        { role: 'assistant', content: final.response} ,
       ]);
 
       return {
@@ -121,8 +120,6 @@ export class ChatEngineService {
     }
   }
 
-
-
   /**
    * Handles the first turn welcome message with optimized locale and channel validation
    */
@@ -148,47 +145,4 @@ export class ChatEngineService {
       );
     }
   }
-
-  // private async handleFollowUpQuestion(): Promise<string> {
-  //   // Generate follow-up question using AI (reusing lastMsgsStr from earlier)
-  //   const response =
-  //     await this.followupQuestionService.generateFollowUpQuestion(
-  //       {
-  //         company: this.company,
-  //         currentIntent: this.userIntent!.parsedIntent,
-  //         missingInformation: this.userIntent!.missingInformation,
-  //         userLanguage: this.detectedUserLanguage || '',
-  //       },
-  //       this.openiaId!
-  //     );
-  //
-  //   // Update conversation state with new values from classified message BEFORE returning response
-  //   await this.updateConversationStateIfNeeded(
-  //     this.conversationId,
-  //     this.conversationRef,
-  //     this.userIntent!,
-  //     this.conversationState
-  //   );
-  //
-  //   // Update summary in background without blocking the return
-  //   if (this.conversationId && this.conversationRef) {
-  //     this.backgroundTaskService.updateSummary(
-  //       this.conversationId,
-  //       this.conversationRef,
-  //       this.userMessage!,
-  //       this.openiaId!
-  //     );
-  //   }
-  //
-  //   if (response.transactions?.length) {
-  //     this.transactions.push(...response.transactions);
-  //   }
-  //
-  //   this.registerTransactions();
-  //
-  //   return response.reply;
-  // }
-
-// En OpenAIService2 añade este helper:
-
 }

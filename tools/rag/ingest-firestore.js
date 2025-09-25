@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import admin from 'firebase-admin';
 import aiplatform from '@google-cloud/aiplatform';
 
+// --- Load environment variables from .env file ---
 const {
   OPENAI_API_KEY,
   GCP_PROJECT,
@@ -10,35 +11,40 @@ const {
   INDEX_RESOURCE_NAME
 } = process.env;
 
+// --- Validate required environment variables ---
 if (!OPENAI_API_KEY) throw new Error('Missing OPENAI_API_KEY');
 if (!GCP_PROJECT) throw new Error('Missing GCP_PROJECT');
 if (!INDEX_RESOURCE_NAME) throw new Error('Missing INDEX_RESOURCE_NAME');
 
-// Firestore via ADC
+// --- Initialize Firebase Admin SDK to connect to Firestore using ADC (Application Default Credentials) ---
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
 
+// --- Initialize OpenAI client with the API key ---
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
+
+// --- Initialize Vertex AI Matching Engine client ---
 const { v1 } = aiplatform;
+console.log(`📡 Using INDEX_RESOURCE_NAME=${INDEX_RESOURCE_NAME}`);
 const indexClient = new v1.IndexServiceClient({
   apiEndpoint: `${GCP_LOCATION}-aiplatform.googleapis.com`,
 });
 
-// Construye texto corto por póliza (sin chunking)
+// --- Helper: Converts an insurance policy into a single descriptive text block (used for embeddings) ---
 function toText(pkg) {
-  // Espera campos: id, name, description, pricePerDay, currency, coverageMedical, region
   return [
     `Plan: ${pkg.name}`,
     `Region: ${pkg.region}`,
-    `Medical Coverage: ${pkg.coverageMedical} ${pkg.currency}`,
+    `Medical Coverage: ${pkg.amountCovered ?? pkg.coverageMedical} ${pkg.currency}`,
     `Price/Day: ${pkg.pricePerDay} ${pkg.currency}`,
     `Details: ${pkg.description}`,
   ].join('\n');
 }
 
+// --- Helper: Calls OpenAI Embeddings API to generate vector embeddings for a batch of texts ---
 async function embedBatch(texts) {
   const res = await openai.embeddings.create({
-    model: 'text-embedding-3-small', // 1536 dims
+    model: 'text-embedding-3-small', // 1536-dimensional embeddings
     input: texts,
   });
   return res.data.map(d => d.embedding);
@@ -46,31 +52,36 @@ async function embedBatch(texts) {
 
 async function main() {
   console.log('🔄 Reading policies from Firestore collection: insurances ...');
+
+  // 1) Fetch all documents from the "insurances" collection in Firestore
   const snap = await db.collection('insurances').get();
   if (snap.empty) {
     console.log('⚠️ No documents found in "insurances".');
     return;
   }
 
+  // 2) Convert Firestore docs to JS objects
   const rows = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   console.log(`✅ Found ${rows.length} policies.`);
 
+  // 3) Convert each insurance policy to text for embedding
   const texts = rows.map(toText);
 
-  // Embeddings en lotes
+  // 4) Generate embeddings in batches to avoid exceeding API limits
   const BATCH = 64;
   const datapoints = [];
+
   for (let i = 0; i < texts.length; i += BATCH) {
     const part = texts.slice(i, i + BATCH);
     const embs = await embedBatch(part);
     for (let j = 0; j < embs.length; j++) {
-      const idx = i + j;
-      datapoints.push({ id: rows[idx].id, vec: embs[j] });
+      datapoints.push({ id: rows[i + j].id, vec: embs[j] });
     }
     console.log(`🧠 Embedded ${Math.min(i + BATCH, texts.length)}/${texts.length}`);
   }
 
-  // Upsert en Matching Engine (STREAM_UPDATE: NO devuelve LRO; no usar op.promise())
+  // 5) Upsert (insert or update) embeddings into Vertex AI Matching Engine
+  // Using STREAM_UPDATE, so no LRO (long-running operation) is returned
   console.log('⬆️ Upserting embeddings to Matching Engine...');
   await indexClient.upsertDatapoints({
     index: INDEX_RESOURCE_NAME,
@@ -79,29 +90,11 @@ async function main() {
       featureVector: d.vec,
     })),
   });
-  console.log('✅ Upsert complete.');
 
-  // Espejo en Firestore para reconstruir contexto (colección me_chunks)
-  console.log('🪞 Mirroring to me_chunks ...');
-  const batch = db.batch();
-  datapoints.forEach((d, k) => {
-    const pkg = rows.find(r => r.id === d.id);
-    const ref = db.collection('me_chunks').doc(d.id);
-    batch.set(ref, {
-      insuranceId: d.id,
-      text: texts[k],
-      name: pkg?.name ?? '',
-      region: pkg?.region ?? '',
-      coverageMedical: pkg?.coverageMedical ?? 0,
-      currency: pkg?.currency ?? 'EUR',
-      pricePerDay: pkg?.pricePerDay ?? 0,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-  });
-  await batch.commit();
-  console.log('✅ Mirror created in me_chunks.');
+  console.log('✅ Upsert complete. Firestore remains the single source of truth.');
 }
 
+// --- Run main() and catch any errors ---
 main().catch(err => {
   console.error('❌ Ingest error:', err);
   process.exit(1);
