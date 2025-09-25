@@ -125,3 +125,23 @@ This allows:
 - 🔍 Vector search for contextual insurance retrieval
 - 🔐 Dynamic company-specific configuration
 - 💾 Memory via OpenAI Conversations API
+
+## 📄 Insurance Plan Management
+
+All travel insurance plans used by the chatbot are managed in Firestore, and can be viewed, created, or edited via:
+
+🔗 [https://cb-halo.web.app/insurances](https://cb-halo.web.app/insurances)
+
+This interface lets you:
+
+- View all available insurance plans
+- Edit existing plans
+- Add new products with coverage, description, and pricing
+
+> ⚠️ **Important:** While these changes are saved in Firestore and visible in the interface, the chatbot **will not immediately reflect them** in recommendations.
+
+This is because the vector embeddings (used for semantic search via Google Vertex AI Matching Engine) are not automatically updated when plans are edited or created. Embeddings are currently generated via a separate manual script.
+
+### 🔧 Planned Improvement
+
+A future update will introduce automatic re-embedding and syncing to the vector index whenever a product is added or modified — keeping the AI assistant always in sync with the latest product offerings.
