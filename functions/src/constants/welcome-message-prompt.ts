@@ -1,13 +1,15 @@
 import { botSetting } from './bot-settings';
 
 export const welcomeMessagePrompt = (
+  companyName: string,
+  companyIndustry: string,
   botName: string,
   tone: string[],
   companySlogan: string,
   locale: string,
   maxChars = 170
 ) => `
-${botSetting(botName, tone, companySlogan)}
+${botSetting(botName, tone, companySlogan, companyIndustry, companyName)}
 
 Task: Write a short chatbot welcome message in **${locale}**, max ${maxChars} characters.
 Base it on the company info above.

@@ -7,9 +7,9 @@ import { BOT_RULES } from './bot-rules.constants';
  * - Case 2: Already offered a plan and can answer user's follow-up -> returns { "reply": string }
  * - Case 3: All key info present to formulate a plan -> returns { "query": string }
  */
-export function userQueryPrompt(botName: string, botTone: string[], companySlogan: string): string {
+export function userQueryPrompt(botName: string, botTone: string[], companySlogan: string, companyIndustry: string, companyName: string): string {
   return `
-${botSetting(botName, botTone, companySlogan)}
+${botSetting(botName, botTone, companySlogan, companyIndustry, companyName)}
 ${BOT_RULES}
 
 You are a JSON-only generator. Always return a single JSON object with double quotes and no trailing commas.

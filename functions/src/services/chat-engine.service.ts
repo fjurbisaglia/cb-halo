@@ -3,9 +3,11 @@ import { welcomeMessagePrompt } from '../constants/welcome-message-prompt';
 import { userQueryPrompt } from '../constants/user-query-prompt';
 import { UserQuery } from '../interfaces/user-query.interface';
 import { EasyInputMessage } from 'openai/resources/responses/responses';
+import { SettingsService } from './settings.service';
 
 export class ChatEngineService {
   openaiService = new OpenAIService2();
+  settingsService = new SettingsService();
 
   conversationId: string | undefined;
   summary: string | undefined;
@@ -78,13 +80,14 @@ export class ChatEngineService {
 
   private async handleUserQuery(userMessage: string, history: any[]): Promise<UserQuery | null> {
     try {
+      // Get settings from database with fallback values
+      const settings = await this.settingsService.getSettingsWithDefaults();
 
-      const botName= 'Raul';
-      const botTone = ['formal'];
-      const companySlogan = 'Your Journey, Fully Protected.';
+      const {botName, tone, companyName, companySlogan, companyIndustry, temperature} = settings;
 
-      const system = userQueryPrompt(botName, botTone, companySlogan);
-      const response = await this.openaiService.gpt4Json<UserQuery>(system, 0.1, 200, userMessage, history);
+      const system = userQueryPrompt(botName!, tone ||
+        [], companySlogan!, companyIndustry!, companyName!);
+      const response = await this.openaiService.gpt4Json<UserQuery>(system, temperature, 200, userMessage, history);
 
       return response.response;
     } catch (error) {
@@ -102,11 +105,14 @@ export class ChatEngineService {
    */
   private async handleFirstTurn(): Promise<string> {
     try {
-      const botName= 'Raul';
-      const botTone = ['formal'];
-      const companySlogan = 'Your Journey, Fully Protected.';
+      // Get settings from database with fallback values
+      const settings = await this.settingsService.getSettingsWithDefaults();
 
-      const system = welcomeMessagePrompt(botName, botTone, companySlogan, this.browserLocale!);
+      const {botName, tone, companyName, companySlogan, companyIndustry} = settings;
+
+
+      const system = welcomeMessagePrompt(companyName || '', companyIndustry || '', botName || '',
+        tone || [], companySlogan || '', this.browserLocale!);
       const response = await this.openaiService.gpt5NanoText(system);
 
       return response.response;
