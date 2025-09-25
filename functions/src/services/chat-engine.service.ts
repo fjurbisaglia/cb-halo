@@ -37,8 +37,7 @@ export class ChatEngineService {
     this.userMessage = message;
     const isFirstTurn = !conversationId;
 
-    //<----------------------------- Case A first turn ----------------------------------->
-
+    // Handle first turn conversation
     if (isFirstTurn) {
       const conversation = await this.openaiService.createConversation();
       this.conversationId = conversation.id;
@@ -50,8 +49,7 @@ export class ChatEngineService {
       };
     }
 
-    // <-------777-----------------------------Handle Existing conversation--------------------------------------------------->
-
+    // Handle existing conversation
     const lastMessages = await this.openaiService.getLastMessages(
      this.conversationId!
     );
@@ -59,17 +57,16 @@ export class ChatEngineService {
     const userQuery = await this.handleUserQuery(message, lastMessages);
 
     if (userQuery?.query) {
-      // 1) Embedding de la consulta
+      // 1) Generate query embedding
       const embedding = await this.openaiService.embed(userQuery.query);
 
-      // 2) Vecinos + contexto (con fallback local si Vertex falla)
+      // 2) Find similar vectors and context (with local fallback if Vertex fails)
       const { context } = await this.vectorSearchService.findWithContext(
         embedding,
         5,
       );
 
-
-      // 3) Redacción final con contexto
+      // 3) Generate final response with context
       const system = 'You are a concise travel-insurance assistant. Use ONLY the provided context. If info is missing, ask briefly for it.';
       const userInput = `User message: ${message}\n\nParsed query: ${userQuery.query}\n\nContext:\n${context || '(no context found)'}`;
       const final = await this.openaiService.gpt5NanoText(system, userInput);
@@ -85,8 +82,7 @@ export class ChatEngineService {
       };
     }
 
-    // <-------777-------------------------------------------------------------------------------->
-    // <-------777--------------------------------Strategies------------------------------------------------>
+    // Handle alternative response strategies
 
     const messages: EasyInputMessage[] = [
       {role: 'user', content: message},
@@ -113,15 +109,16 @@ export class ChatEngineService {
 
       return response.response;
     } catch (error) {
-      console.error('Error generating welcome message:', error);
+      console.error('Error processing user query:', error);
 
-      // Fallback static message
+      // Return null to indicate query processing failed
       return null;
     }
   }
 
   /**
-   * Handles the first turn welcome message with optimized locale and channel validation
+   * Handles the first turn of a conversation by generating a personalized welcome message
+   * based on company settings and user locale
    */
   private async handleFirstTurn(): Promise<string> {
     try {

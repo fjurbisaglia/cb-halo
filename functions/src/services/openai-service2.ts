@@ -106,9 +106,4 @@ export class OpenAIService2 {
     });
     return res.data[0].embedding;
   }
-
-  getClient() {
-    return this.openai;
-  }
-
 }
