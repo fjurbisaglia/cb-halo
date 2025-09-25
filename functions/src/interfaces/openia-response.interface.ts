@@ -1,5 +1,5 @@
 
 export interface OpenAIResponse<T = any> {
-  /** Contenido principal de la respuesta (puede ser texto, JSON u objeto raw) */
+  /** Main response content (can be text, JSON or raw object) */
   response: T;
 }

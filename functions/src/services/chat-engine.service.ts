@@ -43,6 +43,11 @@ export class ChatEngineService {
       this.conversationId = conversation.id;
 
       const firstRunResponse = await this.handleFirstTurn();
+
+      await this.openaiService.addItems(this.conversationId!, [
+        { role: 'assistant', content: firstRunResponse} ,
+      ]);
+
       return {
         reply: firstRunResponse,
         conversationId: this.conversationId!,
@@ -67,9 +72,11 @@ export class ChatEngineService {
       );
 
       // 3) Generate final response with context
-      const system = 'You are a concise travel-insurance assistant. Use ONLY the provided context. If info is missing, ask briefly for it.';
+      const system = `You are a concise travel-insurance assistant.
+       Use ONLY the provided context to recommend the filtered travel insurance plans.`;
+
       const userInput = `User message: ${message}\n\nParsed query: ${userQuery.query}\n\nContext:\n${context || '(no context found)'}`;
-      const final = await this.openaiService.gpt5NanoText(system, userInput);
+      const final = await this.openaiService.gpt5NanoText(system, userInput, lastMessages);
 
       await this.openaiService.addItems(this.conversationId!, [
         {role: 'user', content: message},
@@ -82,8 +89,7 @@ export class ChatEngineService {
       };
     }
 
-    // Handle alternative response strategies
-
+    // Handle alternative when more information is needed
     const messages: EasyInputMessage[] = [
       {role: 'user', content: message},
       {role: 'assistant', content: userQuery?.reply || 'reply'},

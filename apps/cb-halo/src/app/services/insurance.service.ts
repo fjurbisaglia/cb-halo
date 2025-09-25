@@ -11,7 +11,7 @@ export class InsuranceService {
   private insuranceCollection = collection(this.firestore, 'insurances');
 
   /**
-   * Lista todas las pólizas de seguro
+   * Lists all insurance policies
    * @returns Observable<Insurance[]>
    */
   getInsurances(): Observable<Insurance[]> {
@@ -19,8 +19,8 @@ export class InsuranceService {
   }
 
   /**
-   * Obtiene una póliza de seguro por ID
-   * @param id - ID de la póliza
+   * Gets an insurance policy by ID
+   * @param id - Policy ID
    * @returns Observable<Insurance | undefined>
    */
   getInsuranceById(id: string): Observable<Insurance | undefined> {
@@ -29,8 +29,8 @@ export class InsuranceService {
   }
 
   /**
-   * Crea una nueva póliza de seguro
-   * @param insurance - Datos de la póliza (sin ID)
+   * Creates a new insurance policy
+   * @param insurance - Policy data (without ID)
    * @returns Observable<void>
    */
   createInsurance(insurance: Omit<Insurance, 'id'>): Observable<void> {
@@ -38,9 +38,9 @@ export class InsuranceService {
   }
 
   /**
-   * Actualiza una póliza de seguro existente
-   * @param id - ID de la póliza a actualizar
-   * @param insurance - Datos actualizados de la póliza
+   * Updates an existing insurance policy
+   * @param id - ID of the policy to update
+   * @param insurance - Updated policy data
    * @returns Observable<void>
    */
   updateInsurance(id: string, insurance: Partial<Omit<Insurance, 'id'>>): Observable<void> {
@@ -49,8 +49,8 @@ export class InsuranceService {
   }
 
   /**
-   * Elimina una póliza de seguro
-   * @param id - ID de la póliza a eliminar
+   * Deletes an insurance policy
+   * @param id - ID of the policy to delete
    * @returns Observable<void>
    */
   deleteInsurance(id: string): Observable<void> {

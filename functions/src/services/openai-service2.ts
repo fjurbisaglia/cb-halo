@@ -25,13 +25,13 @@ export class OpenAIService2 {
 
   async getLastMessages(openiaId: string) {
     const response = await this.openai.conversations.items.list(openiaId, {
-      limit: 10,
+      limit: 20,
+      order: 'asc',
     });
 
     const previousMessages = response.data as any[];
 
     return previousMessages
-      .filter((msg) => msg.role === 'user' || msg.role === 'assistant')
       .map((msg) => ({
         role: msg.role,
         content: msg.content[0]?.text || '',

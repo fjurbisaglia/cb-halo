@@ -12,7 +12,7 @@ export class ChatbotAiService {
   conversationId = signal<string | null>(null);
 
   constructor() {
-    // Recuperar de localStorage o iniciar en 'auto'
+    // Retrieve from localStorage or initialize as null
     this.conversationId.set(localStorage.getItem('conversationId') || null);
   }
 
@@ -42,16 +42,16 @@ export class ChatbotAiService {
           return r.json() as Promise<ChatRunResponse>;
         })
         .then((data) => {
-          // Guardar conversationId para siguientes turnos
+          // Save conversationId for subsequent turns
           if (data.conversationId) {
             this.conversationId.set(data.conversationId);
             localStorage.setItem('conversationId', this.conversationId()!);
           }
-          return data.reply ?? '[Sin respuesta]';
+          return data.reply ?? '[No response]';
         })
         .catch((e) => {
           console.error('chatRun error', e);
-          return '[Error] No pude procesar tu mensaje.';
+          return '[Error] Could not process your message.';
         })
     );
   }
@@ -59,12 +59,12 @@ export class ChatbotAiService {
   resetConversation() {
     const currentConversationId = this.conversationId();
 
-    // Limpiar mensajes de la conversación actual
-    if (currentConversationId && currentConversationId !== 'auto') {
+    // Clear messages from current conversation
+    if (currentConversationId) {
       localStorage.removeItem(`messages_${currentConversationId}`);
     }
 
-    this.conversationId.set('auto');
+    this.conversationId.set(null);
     localStorage.removeItem('conversationId');
   }
 }
