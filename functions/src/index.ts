@@ -44,7 +44,7 @@ const OPENAI_API_KEY = defineSecret('OPENAI_API_KEY');
 
 
 export const chatRun = onRequest(
-  { region: 'us-central1', cors: true, secrets: [OPENAI_API_KEY] },
+  { region: 'us-central1', cors: true, secrets: [OPENAI_API_KEY], memory: '512MiB',  },
   async (req: Request, res: Response): Promise<void> => {
     // Validación del método HTTP - solo acepta POST
     if (req.method !== 'POST') {

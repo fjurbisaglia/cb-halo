@@ -98,4 +98,17 @@ export class OpenAIService2 {
       response: parsedResponse,
     };
   }
+
+  async embed(text: string): Promise<number[]> {
+    const res = await this.openai.embeddings.create({
+      model: 'text-embedding-3-small', // 1536 dims
+      input: text,
+    });
+    return res.data[0].embedding;
+  }
+
+  getClient() {
+    return this.openai;
+  }
+
 }

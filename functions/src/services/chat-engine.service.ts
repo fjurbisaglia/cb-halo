@@ -4,10 +4,14 @@ import { userQueryPrompt } from '../constants/user-query-prompt';
 import { UserQuery } from '../interfaces/user-query.interface';
 import { EasyInputMessage } from 'openai/resources/responses/responses';
 import { SettingsService } from './settings.service';
+import { VectorSearchService } from './vector-search.service';
+
 
 export class ChatEngineService {
   openaiService = new OpenAIService2();
   settingsService = new SettingsService();
+  vectorSearchService = new VectorSearchService();
+
 
   conversationId: string | undefined;
   summary: string | undefined;
@@ -57,8 +61,27 @@ export class ChatEngineService {
     const userQuery = await this.handleUserQuery(message, lastMessages);
 
     if (userQuery?.query) {
+      // 1) Embedding de la consulta
+      const embedding = await this.openaiService.embed(userQuery.query);
+
+      // 2) Vecinos + contexto (con fallback local si Vertex falla)
+      const { ids, context } = await this.vectorSearchService.findWithContext(
+        embedding,
+        5,
+        this.openaiService.getClient() // <-- pásalo para fallback
+      );
+
+      // 3) Redacción final con contexto
+      const system = 'You are a concise travel-insurance assistant. Use ONLY the provided context. If info is missing, ask briefly for it.';
+      const userInput = `User message: ${message}\n\nParsed query: ${userQuery.query}\n\nContext:\n${context || '(no context found)'}`;
+      const final = await this.openaiService.gpt5NanoText(system, userInput);
+
+      await this.openaiService.addItems(this.conversationId!, [
+        { role: 'assistant', content: `SOURCES: ${ids.join(', ')}` },
+      ]);
+
       return {
-        reply: 'query',
+        reply: final.response || 'Let me know your destination region and coverage needed to recommend a plan.',
         conversationId: this.conversationId!,
       };
     }
@@ -166,6 +189,6 @@ export class ChatEngineService {
   //   return response.reply;
   // }
 
-
+// En OpenAIService2 añade este helper:
 
 }
