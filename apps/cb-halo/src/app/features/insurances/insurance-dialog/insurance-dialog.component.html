@@ -5,28 +5,36 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" placeholder="Insurance name">
-          <mat-error *ngIf="insuranceForm.get('name')?.hasError('required')">
-            Name is required
-          </mat-error>
+          @if (insuranceForm.get('name')?.hasError('required')) {
+            <mat-error>
+              Name is required
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Description</mat-label>
           <textarea matInput formControlName="description" placeholder="Insurance description" rows="3"></textarea>
-          <mat-error *ngIf="insuranceForm.get('description')?.hasError('required')">
-            Description is required
-          </mat-error>
+          @if (insuranceForm.get('description')?.hasError('required')) {
+            <mat-error>
+              Description is required
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Price per day</mat-label>
           <input matInput type="number" formControlName="pricePerDay" placeholder="0.00">
-          <mat-error *ngIf="insuranceForm.get('pricePerDay')?.hasError('required')">
-            Price per day is required
-          </mat-error>
-          <mat-error *ngIf="insuranceForm.get('pricePerDay')?.hasError('min')">
-            Price per day must be greater than or equal to 0
-          </mat-error>
+          @if (insuranceForm.get('pricePerDay')?.hasError('required')) {
+            <mat-error>
+              Price per day is required
+            </mat-error>
+          }
+          @if (insuranceForm.get('pricePerDay')?.hasError('min')) {
+            <mat-error>
+              Price per day must be greater than or equal to 0
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -35,20 +43,26 @@
             <mat-option value="EUR">EUR</mat-option>
             <mat-option value="USD">USD</mat-option>
           </mat-select>
-          <mat-error *ngIf="insuranceForm.get('currency')?.hasError('required')">
-            Currency is required
-          </mat-error>
+          @if (insuranceForm.get('currency')?.hasError('required')) {
+            <mat-error>
+              Currency is required
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Amount covered</mat-label>
           <input matInput type="number" formControlName="amountCovered" placeholder="0.00">
-          <mat-error *ngIf="insuranceForm.get('amountCovered')?.hasError('required')">
-            Amount covered is required
-          </mat-error>
-          <mat-error *ngIf="insuranceForm.get('amountCovered')?.hasError('min')">
-            Amount covered must be greater than or equal to 0
-          </mat-error>
+          @if (insuranceForm.get('amountCovered')?.hasError('required')) {
+            <mat-error>
+              Amount covered is required
+            </mat-error>
+          }
+          @if (insuranceForm.get('amountCovered')?.hasError('min')) {
+            <mat-error>
+              Amount covered must be greater than or equal to 0
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -58,9 +72,11 @@
             <mat-option value="Worldwide">Worldwide</mat-option>
             <mat-option value="Latin America">Latin America</mat-option>
           </mat-select>
-          <mat-error *ngIf="insuranceForm.get('region')?.hasError('required')">
-            Region is required
-          </mat-error>
+          @if (insuranceForm.get('region')!.hasError('required')) {
+            <mat-error>
+              Region is required
+            </mat-error>
+          }
         </mat-form-field>
       </form>
     </mat-dialog-content>
