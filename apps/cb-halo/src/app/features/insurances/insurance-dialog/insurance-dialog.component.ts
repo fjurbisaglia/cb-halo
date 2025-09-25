@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +18,7 @@ export interface DialogData {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,23 +30,23 @@ export interface DialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InsuranceDialogComponent {
-  insurance: Partial<Insurance> = {};
+  insuranceForm: FormGroup;
   readonly dialogRef = inject(MatDialogRef<InsuranceDialogComponent>);
-  data = inject(MAT_DIALOG_DATA);
+  readonly data = inject(MAT_DIALOG_DATA);
+  private readonly fb = inject(FormBuilder);
 
-  constructor(
-  ) {
+  constructor() {
+    this.insuranceForm = this.fb.group({
+      name: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      pricePerDay: [0, [Validators.required, Validators.min(0)]],
+      currency: ['EUR', [Validators.required]],
+      amountCovered: [0, [Validators.required, Validators.min(0)]],
+      region: ['Europe', [Validators.required]]
+    });
+
     if (this.data.mode === 'edit' && this.data.insurance) {
-      this.insurance = { ...this.data.insurance };
-    } else {
-      this.insurance = {
-        name: '',
-        description: '',
-        pricePerDay: 0,
-        currency: 'EUR',
-        amountCovered: 0,
-        region: 'Europe'
-      };
+      this.insuranceForm.patchValue(this.data.insurance);
     }
   }
 
@@ -55,6 +55,8 @@ export class InsuranceDialogComponent {
   }
 
   onSave(): void {
-    this.dialogRef.close(this.insurance);
+    if (this.insuranceForm.valid) {
+      this.dialogRef.close(this.insuranceForm.value);
+    }
   }
 }
