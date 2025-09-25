@@ -1,23 +1,23 @@
 
-    <h2 mat-dialog-title>{{ data.mode === 'create' ? 'Crear Seguro' : 'Editar Seguro' }}</h2>
+    <h2 mat-dialog-title>{{ data.mode === 'create' ? 'Create Insurance' : 'Edit Insurance' }}</h2>
     <mat-dialog-content>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="insurance.name" placeholder="Nombre del seguro">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="insurance.name" placeholder="Insurance name">
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Descripción</mat-label>
-        <textarea matInput [(ngModel)]="insurance.description" placeholder="Descripción del seguro" rows="3"></textarea>
+        <mat-label>Description</mat-label>
+        <textarea matInput [(ngModel)]="insurance.description" placeholder="Insurance description" rows="3"></textarea>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Precio por día</mat-label>
+        <mat-label>Price per day</mat-label>
         <input matInput type="number" [(ngModel)]="insurance.pricePerDay" placeholder="0.00">
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Moneda</mat-label>
+        <mat-label>Currency</mat-label>
         <mat-select [(ngModel)]="insurance.currency">
           <mat-option value="EUR">EUR</mat-option>
           <mat-option value="USD">USD</mat-option>
@@ -25,22 +25,22 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Monto cubierto</mat-label>
+        <mat-label>Amount covered</mat-label>
         <input matInput type="number" [(ngModel)]="insurance.amountCovered" placeholder="0.00">
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Región</mat-label>
+        <mat-label>Region</mat-label>
         <mat-select [(ngModel)]="insurance.region">
-          <mat-option value="Europe">Europe</mat-option>
-          <mat-option value="Worldwide">Worldwide</mat-option>
-          <mat-option value="Latin America">Latin America</mat-option>
+          <mat-option value="europe">Europe</mat-option>
+          <mat-option value="worldwide">Worldwide</mat-option>
+          <mat-option value="latin-america">Latin America</mat-option>
         </mat-select>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end" class="dialog-actions">
-      <button mat-button (click)="onCancel()">Cancelar</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
       <button mat-raised-button color="primary" (click)="onSave()">
-        {{ data.mode === 'create' ? 'Crear' : 'Guardar' }}
+        {{ data.mode === 'create' ? 'Create' : 'Save' }}
       </button>
     </mat-dialog-actions>

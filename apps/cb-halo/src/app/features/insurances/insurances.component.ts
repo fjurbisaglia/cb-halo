@@ -56,11 +56,11 @@ export class InsurancesComponent implements OnInit {
       if (result) {
         this.insuranceService.createInsurance(result).subscribe({
           next: () => {
-            this.snackBar.open('Seguro creado exitosamente', 'Cerrar', { duration: 3000 });
+            this.snackBar.open('Insurance created successfully', 'Close', { duration: 3000 });
             this.loadInsurances();
           },
           error: (error) => {
-            this.snackBar.open('Error al crear el seguro', 'Cerrar', { duration: 3000 });
+            this.snackBar.open('Error creating insurance', 'Close', { duration: 3000 });
             console.error('Error creating insurance:', error);
           }
         });
@@ -78,11 +78,11 @@ export class InsurancesComponent implements OnInit {
       if (result && insurance.id) {
         this.insuranceService.updateInsurance(insurance.id, result).subscribe({
           next: () => {
-            this.snackBar.open('Seguro actualizado exitosamente', 'Cerrar', { duration: 3000 });
+            this.snackBar.open('Insurance updated successfully', 'Close', { duration: 3000 });
             this.loadInsurances();
           },
           error: (error) => {
-            this.snackBar.open('Error al actualizar el seguro', 'Cerrar', { duration: 3000 });
+            this.snackBar.open('Error updating insurance', 'Close', { duration: 3000 });
             console.error('Error updating insurance:', error);
           }
         });
@@ -94,11 +94,11 @@ export class InsurancesComponent implements OnInit {
     if (insurance.id) {
       this.insuranceService.deleteInsurance(insurance.id).subscribe({
         next: () => {
-          this.snackBar.open('Seguro eliminado exitosamente', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Insurance deleted successfully', 'Close', { duration: 3000 });
           this.loadInsurances();
         },
         error: (error) => {
-          this.snackBar.open('Error al eliminar el seguro', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Error deleting insurance', 'Close', { duration: 3000 });
           console.error('Error deleting insurance:', error);
         }
       });

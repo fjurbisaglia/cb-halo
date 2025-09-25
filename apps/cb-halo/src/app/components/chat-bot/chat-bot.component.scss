@@ -102,7 +102,7 @@ $backdrop-blur-sm: blur(8px);
     margin-right: 16px;
     position: relative;
 
-    .avatar-icon, .avatar-image {
+    .avatar-icon {
       width: 48px;
       height: 48px;
       border-radius: 50%;
@@ -127,12 +127,6 @@ $backdrop-blur-sm: blur(8px);
       animation: avatarPulse 3s ease-in-out infinite;
     }
 
-    .avatar-image {
-      object-fit: cover;
-      border: 3px solid transparent;
-      background: $primary-gradient;
-      background-clip: padding-box;
-    }
 
     &::after {
       content: '';
@@ -274,13 +268,11 @@ $backdrop-blur-sm: blur(8px);
   }
 }
 
-// Modern Messages container with enhanced styling
 .chat-messages {
   flex: 1;
   padding: 24px 20px;
   overflow-y: auto;
 
-  // Subtle gradient background
   background: linear-gradient(180deg,
     rgba(248, 250, 252, 0.8) 0%,
     rgba(241, 245, 249, 0.6) 100%);
@@ -289,23 +281,17 @@ $backdrop-blur-sm: blur(8px);
   flex-direction: column;
   gap: 16px;
 
-  // Enhanced scrolling experience
   scroll-behavior: smooth;
-
-  // Custom scrollbar styling is handled by the container's global styles
 }
 
-// Enhanced Message styles with modern design
 .message {
   max-width: 85%;
   padding: 16px 20px;
   border-radius: $border-radius-lg;
   position: relative;
 
-  // Enhanced entrance animation
   animation: messageSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
-  // Subtle hover effect
   transition: all $transition-fast;
 
   &:hover {
@@ -343,10 +329,8 @@ $backdrop-blur-sm: blur(8px);
   color: $text-light;
   border-bottom-right-radius: 6px;
 
-  // Enhanced shadow and glow
   box-shadow: $shadow-lg, 0 0 20px rgba(102, 126, 234, 0.25);
 
-  // Subtle border for depth
   border: 1px solid rgba(255, 255, 255, 0.2);
 
   &:hover {
@@ -358,7 +342,6 @@ $backdrop-blur-sm: blur(8px);
     color: rgba(255, 255, 255, 0.7);
   }
 
-  // Message tail effect
   &::after {
     content: '';
     position: absolute;
@@ -378,12 +361,10 @@ $backdrop-blur-sm: blur(8px);
   color: $text-primary;
   border-bottom-left-radius: 6px;
 
-  // Glassmorphism effect
   backdrop-filter: $backdrop-blur-sm;
   -webkit-backdrop-filter: $backdrop-blur-sm;
   border: 1px solid rgba(255, 255, 255, 0.3);
 
-  // Subtle shadow
   box-shadow: $shadow, 0 0 15px rgba(0, 0, 0, 0.05);
 
   &:hover {
@@ -395,7 +376,6 @@ $backdrop-blur-sm: blur(8px);
     color: $text-muted;
   }
 
-  // Message tail effect
   &::after {
     content: '';
     position: absolute;
@@ -409,7 +389,6 @@ $backdrop-blur-sm: blur(8px);
   }
 }
 
-// Enhanced Typing indicator with modern styling
 .typing-indicator {
   display: flex;
   align-items: center;
@@ -423,7 +402,6 @@ $backdrop-blur-sm: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: $shadow, 0 0 15px rgba(0, 0, 0, 0.05);
 
-  // Entrance animation
   animation: typingIndicatorFadeIn 0.3s ease-out;
 
   .typing-dot {
@@ -448,7 +426,6 @@ $backdrop-blur-sm: blur(8px);
     }
   }
 
-  // Message tail effect
   &::after {
     content: '';
     position: absolute;
@@ -462,13 +439,11 @@ $backdrop-blur-sm: blur(8px);
   }
 }
 
-// Modern Input area with glassmorphism and enhanced interactions
 .chat-input-container {
   display: flex;
   align-items: center;
   padding: 20px 24px;
 
-  // Glassmorphism background
   background: linear-gradient(135deg,
     rgba(255, 255, 255, 0.9) 0%,
     rgba(255, 255, 255, 0.7) 100%);
@@ -478,7 +453,6 @@ $backdrop-blur-sm: blur(8px);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
 
-  // Subtle animated background pattern
   &::before {
     content: '';
     position: absolute;
@@ -507,7 +481,6 @@ $backdrop-blur-sm: blur(8px);
     font-weight: 400;
     letter-spacing: 0.01em;
 
-    // Glassmorphism input background
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: $backdrop-blur-sm;
     -webkit-backdrop-filter: $backdrop-blur-sm;
@@ -515,7 +488,6 @@ $backdrop-blur-sm: blur(8px);
     box-shadow: $shadow-sm, inset 0 1px 2px rgba(0, 0, 0, 0.05);
     transition: all $transition-normal;
 
-    // Placeholder styling
     &::placeholder {
       color: $text-muted;
       font-weight: 400;
@@ -553,11 +525,9 @@ $backdrop-blur-sm: blur(8px);
     justify-content: center;
     cursor: pointer;
 
-    // Enhanced shadow and effects
     box-shadow: $shadow-lg, 0 0 20px rgba(102, 126, 234, 0.3);
     transition: all $transition-normal;
 
-    // Subtle border for depth
     border: 1px solid rgba(255, 255, 255, 0.2);
 
     &:hover:not(:disabled) {
@@ -597,7 +567,6 @@ $backdrop-blur-sm: blur(8px);
   }
 }
 
-// Modern Sophisticated Animations
 @keyframes containerFadeIn {
   from {
     opacity: 0;
@@ -693,7 +662,7 @@ $backdrop-blur-sm: blur(8px);
   .chatbot-header {
     padding: 16px 20px;
 
-    .chatbot-avatar .avatar-icon, .chatbot-avatar .avatar-image {
+    .chatbot-avatar .avatar-icon, .chatbot-avatar {
       width: 44px;
       height: 44px;
     }
@@ -761,7 +730,7 @@ $backdrop-blur-sm: blur(8px);
       margin-right: 12px;
     }
 
-    .chatbot-avatar .avatar-icon, .chatbot-avatar .avatar-image {
+    .chatbot-avatar .avatar-icon, .chatbot-avatar {
       width: 40px;
       height: 40px;
       font-size: 14px;

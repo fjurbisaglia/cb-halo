@@ -1,11 +1,11 @@
 <div class="insurances-container">
   <!-- Header -->
   <mat-toolbar class="header-toolbar">
-    <span class="title">Seguros</span>
+    <span class="title">Insurances</span>
     <span class="spacer"></span>
     <button mat-raised-button color="primary" (click)="openCreateDialog()" class="create-button">
       <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-      Nuevo Seguro
+      New Insurance
     </button>
   </mat-toolbar>
 
@@ -14,7 +14,7 @@
     <mat-table [dataSource]="(insurances$ | async) || []" class="insurances-table">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef class="header-cell">Nombre</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell">Name</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell">
           <div class="cell-content">
             <span class="primary-text">{{ insurance.name }}</span>
@@ -24,7 +24,7 @@
 
       <!-- Description Column -->
       <ng-container matColumnDef="description">
-        <mat-header-cell *matHeaderCellDef class="header-cell">Descripción</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell">Description</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell">
           <div class="cell-content">
             <span class="secondary-text">{{ insurance.description }}</span>
@@ -34,7 +34,7 @@
 
       <!-- Price Per Day Column -->
       <ng-container matColumnDef="pricePerDay">
-        <mat-header-cell *matHeaderCellDef class="header-cell">Precio/Día</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell">Price/Day</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell">
           <div class="cell-content">
             <span class="price-text">{{ insurance.pricePerDay | currency:insurance.currency:'symbol':'1.2-2' }}</span>
@@ -44,7 +44,7 @@
 
       <!-- Currency Column -->
       <ng-container matColumnDef="currency">
-        <mat-header-cell *matHeaderCellDef class="header-cell">Moneda</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell">Currency</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell">
           <div class="cell-content">
             <span class="chip">{{ insurance.currency }}</span>
@@ -54,7 +54,7 @@
 
       <!-- Amount Covered Column -->
       <ng-container matColumnDef="amountCovered">
-        <mat-header-cell *matHeaderCellDef class="header-cell">Cobertura</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell">Coverage</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell">
           <div class="cell-content">
             <span class="coverage-text">{{ insurance.amountCovered | currency:insurance.currency:'symbol':'1.0-0' }}</span>
@@ -64,7 +64,7 @@
 
       <!-- Region Column -->
       <ng-container matColumnDef="region">
-        <mat-header-cell *matHeaderCellDef class="header-cell">Región</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell">Region</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell">
           <div class="cell-content">
             <span class="region-chip">{{ insurance.region }}</span>
@@ -74,20 +74,20 @@
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef class="header-cell actions-header">Acciones</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="header-cell actions-header">Actions</mat-header-cell>
         <mat-cell *matCellDef="let insurance" class="data-cell actions-cell">
           <div class="actions-container">
             <button mat-icon-button
                     color="primary"
                     (click)="openEditDialog(insurance)"
-                    matTooltip="Editar"
+                    matTooltip="Edit"
                     class="action-button">
               <mat-icon>edit</mat-icon>
             </button>
             <button mat-icon-button
                     color="warn"
                     (click)="deleteInsurance(insurance)"
-                    matTooltip="Eliminar"
+                    matTooltip="Delete"
                     class="action-button">
               <mat-icon>delete</mat-icon>
             </button>
@@ -101,14 +101,17 @@
     </mat-table>
 
     <!-- Empty State -->
-    <div *ngIf="(insurances$ | async)?.length === 0" class="empty-state">
-      <mat-icon class="empty-icon">insurance</mat-icon>
-      <h3>No hay seguros registrados</h3>
-      <p>Comienza creando tu primer seguro</p>
-      <button mat-raised-button color="primary" (click)="openCreateDialog()">
-        <mat-icon>add</mat-icon>
-        Crear Seguro
-      </button>
-    </div>
+
+    @if ((insurances$ | async)?.length === 0) {
+      <div class="empty-state">
+        <mat-icon class="empty-icon">insurance</mat-icon>
+        <h3>No insurances registered</h3>
+        <p>Start by creating your first insurance</p>
+        <button mat-raised-button color="primary" (click)="openCreateDialog()">
+          <mat-icon>add</mat-icon>
+          Create Insurance
+        </button>
+      </div>
+    }
   </mat-card>
 </div>

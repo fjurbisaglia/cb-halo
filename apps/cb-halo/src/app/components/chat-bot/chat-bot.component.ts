@@ -7,8 +7,6 @@ import {
   signal,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-// import { Company, CompanyService } from '@chatbot/company';
 import { finalize } from 'rxjs';
 import { ChatbotAiService } from '../../services/chatbot-ai.service';
 import { INITIAL_TRIGGER } from '../../constants/initial-trigger.constants';
@@ -31,20 +29,15 @@ interface Message {
 export class ChatBotComponent implements OnInit {
   messages: Message[] = [];
   isTyping = signal(false);
-  // company = signal<Company | null>(null);
-  chatbotImageUrl = signal<string | null>(null);
 
   private aiService = inject(ChatbotAiService);
-  // private companyService = inject(CompanyService);
 
   formControl = new FormControl('');
 
   constructor() {
-    // Effect to watch for conversationId changes and load messages when available
     effect(() => {
       const conversationId = this.aiService.conversationId();
 
-      // Only load messages if we have a valid conversationId and it's not the initial 'auto'
       if (
         conversationId
       ) {
@@ -54,16 +47,6 @@ export class ChatBotComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load messages from storage first if there's an existing conversation
-    // this.loadMessagesFromStorage();
-
-    // if (this.companyId()) {
-    //   this.loadCompanyData(this.companyId());
-    // }
-
-
-
-    // Only start a new conversation if there's no existing conversationId or it's 'auto'
     if (
       !this.aiService.conversationId()
     ) {
@@ -73,7 +56,7 @@ export class ChatBotComponent implements OnInit {
 
   private loadMessagesFromStorage(): void {
     const conversationId = this.aiService.conversationId();
-    if (conversationId && conversationId !== 'auto') {
+    if (conversationId) {
       const savedMessages = localStorage.getItem(`messages_${conversationId}`);
 
       if (savedMessages) {
@@ -125,10 +108,8 @@ export class ChatBotComponent implements OnInit {
       timestamp: new Date(),
     });
 
-    // Guardar mensajes en localStorage
     this.saveMessagesToStorage();
 
-    // Scroll to bottom after message is added
     setTimeout(() => {
       const chatContainer = document.querySelector('.chat-messages');
       if (chatContainer) {
@@ -138,13 +119,10 @@ export class ChatBotComponent implements OnInit {
   }
 
   resetConversation(): void {
-    // Limpiar mensajes de la pantalla
     this.messages = [];
 
-    // Resetear conversación en el servicio (limpia localStorage)
     this.aiService.resetConversation();
 
-    // Iniciar nueva conversación
     this.getReply(INITIAL_TRIGGER);
   }
 }
