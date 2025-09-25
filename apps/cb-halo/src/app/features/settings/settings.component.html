@@ -46,13 +46,12 @@
           <label class="temperature-label">Temperature (0-1)</label>
           <p class="temperature-description">Controls the randomness of the bot's responses. Lower values make responses more focused and deterministic.</p>
           <mat-slider
-            formControlName="temperature"
             min="0"
             max="1"
             step="0.1"
             showTickMarks
             class="temperature-slider">
-            <input matSliderThumb>
+            <input matSliderThumb formControlName="temperature">
           </mat-slider>
           <div class="temperature-value">
             Current value: {{ settingsForm.get('temperature')?.value | number:'1.1-1' }}
