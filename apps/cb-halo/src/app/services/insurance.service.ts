@@ -29,6 +29,26 @@ export class InsuranceService {
   }
 
   /**
+   * Crea una nueva póliza de seguro
+   * @param insurance - Datos de la póliza (sin ID)
+   * @returns Observable<void>
+   */
+  createInsurance(insurance: Omit<Insurance, 'id'>): Observable<void> {
+    return from(addDoc(this.insuranceCollection, insurance).then(() => {}));
+  }
+
+  /**
+   * Actualiza una póliza de seguro existente
+   * @param id - ID de la póliza a actualizar
+   * @param insurance - Datos actualizados de la póliza
+   * @returns Observable<void>
+   */
+  updateInsurance(id: string, insurance: Partial<Omit<Insurance, 'id'>>): Observable<void> {
+    const insuranceDoc = doc(this.firestore, 'insurances', id);
+    return from(updateDoc(insuranceDoc, insurance));
+  }
+
+  /**
    * Elimina una póliza de seguro
    * @param id - ID de la póliza a eliminar
    * @returns Observable<void>
