@@ -821,3 +821,8 @@ $backdrop-blur-sm: blur(8px);
     transform: none;
   }
 }
+
+.send-button {
+  z-index: 9999 !important;
+  position: relative;
+}
