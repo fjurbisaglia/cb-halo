@@ -1,0 +1,14 @@
+{
+  "name": "rag-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ingest:fs": "node ingest-firestore.js"
+  },
+  "dependencies": {
+    "@google-cloud/aiplatform": "^3.13.0",
+    "dotenv": "^16.4.5",
+    "firebase-admin": "^12.6.0",
+    "openai": "^5.23.0"
+  }
+}

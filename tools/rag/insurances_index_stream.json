@@ -1,0 +1,7 @@
+{
+  "config": {
+    "dimensions": 1536,
+    "distanceMeasureType": "COSINE_DISTANCE",
+    "algorithmConfig": { "bruteForceConfig": {} }
+  }
+}
